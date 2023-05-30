@@ -1,0 +1,236 @@
+Write embedded c code using At mega 128 to control 8-leds 
+
+#define F_CPU 1000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+
+int main(void)
+{
+    while (1) 
+    {
+
+		DDRC|=0xFF;			// PORTF as o/p
+		PORTC =0x00;		// initial value
+		for ( int i=0; i<=7; i++)
+		{
+			PORTC = (1<<i);
+			_delay_ms(500);
+		}
+		
+		
+    }
+}
+===========================================================
+Write embedded c code using At mega 128 to control two leds using two push buttons.
+
+#define F_CPU 1000000ul
+#include <avr/io.h>
+#include <util/delay.h>
+
+
+int main(void)
+{
+	DDRB &= ~(1<<PB0) & ~(1<<PB1);  // configure pin 0 and pin 1 in PORTB as input pins.
+	DDRC |= (1<<PC0) | (1<<PC1);    // configure pin 0 and pin 1 in PORTC as output pins.
+	
+	// Set pin 0 and pin 1 in PORTC with value 0 at the beginning (LED1 and LED2 are OFF)
+	PORTC &= ~(1<<PC0) & ~(1<<PC1);
+	
+    while(1)
+    {
+	    if(PINB & (1<<PB0))       // Check if the first switch at PB0 is pressed or not
+	    {
+		    PORTC |= (1<<PC0);    // Set pin 0 in PORTC with value 1 (LED1 ON)
+	    }
+	    else
+	    {
+		    PORTC &= (~(1<<PC0)); // Set pin 0 in PORTC with value 0 (LED1 OFF)
+	    }
+	    if(PINB & (1<<PB1))       // Check if the second switch at PB1 is pressed or not
+	    {
+		    PORTC |= (1<<PC1);    // Set pin 1 in PORTC with value 1 (LED2 ON)
+	    }
+	    else
+	    {
+		    PORTC &= (~(1<<PC1)); // Set pin 1 in PORTC with value 0 (LED2 OFF)
+	    }
+    }
+    }
+=================================================================
+3Write embedded c code using At mega 128 to control a 7-segment with decoder using a push led
+button
+#define F_CPU 1000000ul
+#include <avr/io.h>
+#include <util/delay.h>
+
+int main(void)
+{	
+	DDRC |= (1<<PC0);       //the led output pin
+	PORTC &= ~ (1<<PC0);     // initial value for led 1 because the 7 segment is display 0 in the beginning of code
+	DDRC &= ~(1<<PC4);      // the switch input pin
+	DDRE|=0x0f;              //the 7 segment output pin  
+	PORTE&=0xf0;            // initial value for 7 segment 0
+    while (1) 
+    {
+		if(!(PINC&(1<<PC4)))
+		{
+		  _delay_ms(30);
+			if(!(PINC&(1<<PC4)))
+			{
+		        if((PORTE&0x0f)==9)
+		           {
+				     PORTE&=0xf0;
+		           }
+			    else
+				   {
+					PORTC |= (1<<PC0); //led of
+				    PORTE++;
+					 if(((PORTE&0x0f)==0)||((PORTE&0x0f)==9))
+					 {
+						PORTC &= ~ (1<<PC0);    //led on
+					 }
+					
+			        }
+					
+		}//			if(!(PINC&(1<<PC4))) debounce
+
+ while(!(PINC&(1<<PC4))){}
+		} //			if(!(PINC&(1<<PC4))) check		
+    }//while1
+}// main
+=================================================================
+Write embedded c code using At mega 128 to control a 7-segment with decoder using a push
+button.
+#define F_CPU 1000000ul
+#include <avr/io.h>
+#include <util/delay.h>
+
+int main(void)
+{	
+	DDRC &= ~(1<<PC4);
+	PORTC |=(1<<PC4);
+	DDRE|=0x0f;
+	PORTE&=0xf0;
+    while (1) 
+    {
+		if(!(PINC&(1<<PC4)))
+		{
+		  _delay_ms(30);
+			if(!(PINC&(1<<PC4)))
+			{
+		        if((PORTE&0x0f)==9)
+		           {
+				     PORTE&=0xf0;
+		           }
+			    else
+				   {
+				    PORTE++;
+			        }
+					
+		}//			if(!(PINC&(1<<PC4))) debounce
+
+ while(!(PINC&(1<<PC4))){}
+		} //			if(!(PINC&(1<<PC4))) check		
+    }//while1
+}// main
+
+=================================================================
+5
+Write embedded c code using At mega 128 to control a 7-segment with decoder using two push
+button
+#define F_CPU 1000000ul
+#include <avr/io.h>
+#include <util/delay.h>
+
+
+int main(void)
+{
+	DDRA &= 0xFC; 
+	DDRD |= 0x0F;  
+	PORTD &= 0xF0;
+	
+	unsigned char num = 0;
+	
+	while(1)
+	{
+		if(PINA & (1<<0)) 
+		{
+			_delay_ms(30);
+			if(PINA & (1<<0)) 
+			{
+				if(PORTD != 9)
+				{
+					num++;
+					PORTD =num;
+				}
+			}
+			while(PINA & (1<<0)){}
+		}
+		//zzzzzzzz
+		{
+			{
+				_delay_ms(30);
+				if(PINA & (1<<1))
+				{
+					if(PORTD <= 0)
+					{
+						
+						num=0;
+						PORTD = num ;
+					}
+					else
+					{
+						num--;
+						PORTD = num ;
+					}
+					
+				}
+				while(PINA & (1<<1)){}
+		}
+		
+		
+		}
+		}
+		}
+	
+======================================================
+Write embedded c code using At mega 128 to control led using push button
+
+#define F_CPU 1000000ul
+#include <avr/io.h>
+#include <util/delay.h>
+int main(void)
+{
+	DDRB = DDRB & (~(1<<PB0));
+	PORTB |= (1<<PB0);
+	
+	DDRC = DDRC | (1<<PC0);
+	PORTC = PORTC | (1<<PC0);
+	
+	while(1)
+	{
+		if(!(PINB & (1<<PB0)))
+		{
+			_delay_ms(30);
+			if(!(PINB & (1<<PB0)))
+			{
+				
+				PORTC ^= (1<<0);
+			}
+			while(!(PINB & (1<<PB0))) {}
+
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
